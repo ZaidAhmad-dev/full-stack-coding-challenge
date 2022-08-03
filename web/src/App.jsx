@@ -1,26 +1,27 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore";
 import './App.css';
-import { db } from './config';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const usersCollectionRef = collection(db, 'users');
+  const [users, setUsers] = useState(null);
 
   useEffect(()=> {
 
     const getUsers = async () => {
-      const data = await getDocs(usersCollectionRef);
-      console.log(data)
+      const res = await fetch('http://localhost:4000/users');
+      const data = await res.json();
+      setUsers(data);
     }
 
-    getUsers();
+    // getUsers();
 
   },[])
 
   return (
     <div className="App">
-      hello
+      <Register/>
+      <Login/>
     </div>
   )
 }

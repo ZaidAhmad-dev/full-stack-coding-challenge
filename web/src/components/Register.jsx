@@ -11,7 +11,7 @@ const Register = () => {
         e.preventDefault();
         // using /create route to create a new user
         try {
-            const res = await fetch('http://localhost:4000/create', {
+            const res = await fetch('http://localhost:4000/createuser', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

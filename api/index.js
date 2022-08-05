@@ -93,7 +93,7 @@ app.post("/deleteuser", async (req, res) => {
   }
 });
 
-app.post("/deleteproduct", async (req, res) => {
+app.delete("/deleteproduct", async (req, res) => {
   try {
     const id = req.body.id;
     await Products.doc(id).delete();

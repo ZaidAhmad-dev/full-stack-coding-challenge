@@ -30,3 +30,33 @@ main{
 .sidebar-item-list li:not(:last-child){
     margin-bottom: 10px;
 }
+
+table{
+    width: 100%;
+}
+
+table thead{
+    text-align: left;
+}
+
+td img{
+    width: 200px;
+}
+
+.products-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group{
+    margin-bottom: 20px;
+}
+
+.modal-header{
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.modal-header h2{
+    margin: 0 20px 0 0;
+}

@@ -1,27 +1,23 @@
-import { useState, useEffect } from 'react';
 import './App.css';
-import Login from './components/Login';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home/Home';
+import Dashboard from './pages/Dashboard/Dashboard';
 import Register from './components/Register';
+import Login from './components/Login';
+import Products from './components/Products';
 
 function App() {
-  const [users, setUsers] = useState(null);
-
-  useEffect(()=> {
-
-    const getUsers = async () => {
-      const res = await fetch('http://localhost:4000/users');
-      const data = await res.json();
-      setUsers(data);
-    }
-
-    // getUsers();
-
-  },[])
-
+  
   return (
     <div className="App">
-      <Register/>
-      <Login/>
+        <Routes>
+          <Route exact path="/" element={<Dashboard/>} />
+          <Route path="/dashboard" element={<Dashboard/>} >
+            <Route path="register" element={<Register/>} />
+            <Route path="login" element={<Login/>} />
+            <Route path="products" element={<Products/>} />
+          </Route>
+        </Routes>
     </div>
   )
 }

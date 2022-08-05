@@ -1,0 +1,32 @@
+.dashboard-wrapper{
+    display: flex;
+}
+
+.sidebar-wrapper{
+    width: 20%;
+}
+
+main{
+    width: 80%;
+}
+
+.nav-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-list{
+    display: flex;
+}
+
+.nav-list li:not(:last-child){
+    margin-right: 10px;
+}
+
+.sidebar-item-header{
+    margin-bottom: 40px;
+}
+
+.sidebar-item-list li:not(:last-child){
+    margin-bottom: 10px;
+}

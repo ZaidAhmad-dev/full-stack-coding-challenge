@@ -71,18 +71,6 @@ app.put("/updateuser", async (req, res) => {
   }
 });
 
-app.put("/updateproduct", async (req, res) => {
-  try {
-    const id = req.body.id;
-    delete req.body.id;
-    const data = req.body;
-    await Products.doc(id).update(data);
-    res.send({ msg: "Updated" });
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
 app.post("/deleteuser", async (req, res) => {
   try {
     const id = req.body.id;
@@ -102,5 +90,28 @@ app.delete("/deleteproduct", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+app.put("/updateproduct", async (req, res) => {
+  try {
+    const id = req.body.id;
+    const data = req.body;
+    await Products.doc(id).update(data);
+    res.send({ msg: "Updated" });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// getting product by id
+app.get("/getproduct/:id", async (req, res) => {
+  try {
+    const snapshot = await Products.doc(req.params.id).get();
+    const list = snapshot.data();
+    res.send(list);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+})
+
 
 app.listen(4000, () => console.log("Up & RUnning *4000"));

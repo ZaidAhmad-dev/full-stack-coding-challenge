@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
     ref,
     uploadBytes,
@@ -8,10 +8,12 @@ import {
   } from "firebase/storage";
   import storage from '../../config';
 import { v4 } from "uuid";
+import { AppContext } from '../App';
 
 
 const Products = () => {
-  
+
+    const { loggedInUser, setLoggedInUser } = useContext(AppContext);
     const [products, setProducts] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [imageUpload, setImageUpload] = useState(null);
@@ -26,23 +28,6 @@ const Products = () => {
         try {
             const deleteProductItem = await fetch(`http://localhost:4000/deleteproduct`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id
-                })
-            });
-            setProducts(products.filter(product => product.id !== id));
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    const editProduct = async (id) => {
-        try {
-            const editProductItem = await fetch(`http://localhost:4000/editproduct`, {
-                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -71,6 +56,27 @@ const Products = () => {
                 })
             });
             setProducts(products.concat(productData));
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const editProduct = async (id) => {
+        try {
+            setShowModal(true);
+            const editProductItem = await fetch(`http://localhost:4000/updateproduct`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id,
+                    title: productData.title,
+                    desc: productData.desc,
+                    image: productData.image
+                })
+            });
+            setProducts(products.map(product => product.id === id ? productData : product));
         } catch (err) {
             console.error(err.message);
         }
@@ -114,36 +120,34 @@ const Products = () => {
     <div>
         <div className='products-header'>
             <h2>Products</h2>
-            <button onClick={() => setShowModal(true)}>Add Product</button>
+            <button className='btn' onClick={() => setShowModal(true)}>Add Product</button>
         </div>
         {/* Product Modal */}
         <div className={`modal ${showModal ? 'show-modal' : ''}`}>
             <div className="modal-content">
                 <div className="modal-header">
-                    <h2>Add Product</h2>
-                    <button onClick={() => setShowModal(false)}>Close</button>
+                    <button className='btn' onClick={() => setShowModal(false)}>Close</button>
                 </div>
                 <div className="modal-body">
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="title">Title</label>
-                            <input type="text" className="form-control" id="title" placeholder="Enter title" onChange={(e) => setProductData({...productData, title: e.target.value})} />
+                            <input type="text" className="form-control" id="title" placeholder="Enter title" onChange={(e) => setProductData({...productData, title: e.target.value})} minLength="3" maxLength="50" required />
                         </div>
                         <div className="form-group">
                             <label htmlFor="desc">Description</label>
-                            <textarea className="form-control" id="desc" rows="3" placeholder="Enter description" onChange={(e) => setProductData({...productData, desc: e.target.value})}></textarea>
+                            <textarea className="form-control" id="desc" cols="35" rows="3" placeholder="Enter description" onChange={(e) => setProductData({...productData, desc: e.target.value})} minLength="3" maxLength="200" required></textarea>
                         </div>
                         <div className="form-group">
                             {/* upload image */}
                             <label htmlFor="image">Image</label>
-                            <input type="file" className="form-control" id="image"  onChange={(event) => {setImageUpload(event.target.files[0]);}}/>
+                            <input type="file" className="form-control" id="image"  onChange={(event) => {setImageUpload(event.target.files[0]);}} required/>
                         </div>
                         <button type='submit' className="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>
         </div>
-                        
         <table>
             <thead>
                 <tr>
@@ -154,20 +158,20 @@ const Products = () => {
                 </tr>
             </thead>
             <tbody>
-                {products && products.map((product, index) => {
-                    return (
+                {/* mapping through products if user is logged in */}
+                {loggedInUser ? products?.map((product, index) => 
+                     (
                         <tr key={index}>
-                            <td>{product.title}</td>
-                            <td>{product.desc}</td>
-                            <td><img src={product.image} alt={product.title} /></td>
+                            <td>{product?.title}</td>
+                            <td>{product?.desc}</td>
+                            <td><img src={product?.image} alt={product?.title} /></td>
                             <td>
-                                <button onClick={() => { editProduct(product.id) }}>Edit</button>
-                                <button onClick={() => { deleteProduct(product.id) }}>Delete</button>
+                                <button className='btn' onClick={() => {editProduct(product?.id);}}>Edit</button>
+                                <button className='btn' onClick={() => { deleteProduct(product?.id) }}>Delete</button>
                             </td>
                         </tr>
                     )
-                }
-                )}
+                ) : "Please login to see products"}
             </tbody>
         </table>
     </div>

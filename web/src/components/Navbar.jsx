@@ -1,22 +1,23 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom"
+import { AppContext } from "../App";
 
 const Navbar = () => {
-  return (
-        <nav>
-			<div className="nav-wrapper">
-				<Link to="/products">Products</Link>
-				<ul className="nav-list">
-					<li><Link to="/">Home</Link></li>
-					<li><Link to="/dashboard">Dashboard</Link></li>
-					<li><Link to="/dashboard">Zaid</Link>
-						<ul>
-							<li><Link to="/name">Logout</Link></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-        </nav>
-  )
+    const { loggedInUser, setLoggedInUser } = useContext(AppContext);
+  	return (
+  	      <nav>
+				<div className="nav-wrapper">
+					<ul className="nav-list">
+						<li><Link to="/">Home</Link></li>
+						<li> Welcome <strong>{loggedInUser ? loggedInUser[0].username : 'Guest'}</strong>
+							<ul className="user-list">
+								<li> {loggedInUser ? <button className="btn" onClick={() => {setLoggedInUser(null)}}>Logout</button> : <Link to="/dashboard/login">Login</Link>} </li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+  	      </nav>
+  	)
 }
 
 export default Navbar

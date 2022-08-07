@@ -5,6 +5,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+const port = process.env.PORT || 4000;
+
 // finding all users
 app.get("/users", async (req, res) => {
   try {
@@ -114,4 +116,4 @@ app.get("/getproduct/:id", async (req, res) => {
 })
 
 
-app.listen(4000, () => console.log("Up & RUnning *4000"));
+app.listen(port, () => console.log(`Listening on port ${port}`));
